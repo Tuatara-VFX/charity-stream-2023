@@ -1,0 +1,185 @@
+[gd_resource type="VisualShader" load_steps=10 format=3 uid="uid://dy356sbvitm44"]
+
+[sub_resource type="VisualShaderNodeVectorDecompose" id="VisualShaderNodeVectorDecompose_wteeh"]
+default_input_values = [0, Vector2(0, 0)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_y7rg3"]
+input_name = "index"
+
+[sub_resource type="VisualShaderNodeParticleRingEmitter" id="VisualShaderNodeParticleRingEmitter_mrlch"]
+default_input_values = [0, 1.0, 1, 0.0, 2, 0.0]
+
+[sub_resource type="VisualShaderNodeComment" id="VisualShaderNodeComment_qe1tp"]
+size = Vector2(479.68, 214.05)
+title = "Execution"
+description = "Difference between Output and CustomOutput is execution order.
+Check Generated Shader Code for illustration."
+
+[sub_resource type="VisualShaderNodeFloatConstant" id="VisualShaderNodeFloatConstant_6karr"]
+constant = 0.123
+
+[sub_resource type="VisualShaderNodeParticleRandomness" id="VisualShaderNodeParticleRandomness_n8i5v"]
+default_input_values = [1, 0.0, 2, 1.0]
+
+[sub_resource type="VisualShaderNodeVec2Parameter" id="VisualShaderNodeVec2Parameter_gg2rq"]
+parameter_name = "Particle_Size_Range"
+
+[sub_resource type="VisualShaderNodeComment" id="VisualShaderNodeComment_va6si"]
+size = Vector2(478.47, 182.59)
+title = "Execution"
+description = "Difference between Output and CustomOutput is execution order.
+Check Generated Shader Code for illustration."
+
+[sub_resource type="VisualShaderNodeFloatConstant" id="VisualShaderNodeFloatConstant_6ckhc"]
+constant = 0.456
+
+[resource]
+code = "shader_type particles;
+uniform vec2 Particle_Size_Range;
+
+
+float __rand_from_seed(inout uint seed) {
+	int k;
+	int s = int(seed);
+	if (s == 0)
+	s = 305420679;
+	k = s / 127773;
+	s = 16807 * (s - k * 127773) - 2836 * k;
+	if (s < 0)
+		s += 2147483647;
+	seed = uint(s);
+	return float(seed % uint(65536)) / 65535.0;
+}
+
+float __rand_from_seed_m1_p1(inout uint seed) {
+	return __rand_from_seed(seed) * 2.0 - 1.0;
+}
+
+float __randf_range(inout uint seed, float from, float to) {
+	return __rand_from_seed(seed) * (to - from) + from;
+}
+
+uint __hash(uint x) {
+	x = ((x >> uint(16)) ^ x) * uint(73244475);
+	x = ((x >> uint(16)) ^ x) * uint(73244475);
+	x = (x >> uint(16)) ^ x;
+	return x;
+}
+
+mat3 __build_rotation_mat3(vec3 axis, float angle) {
+	axis = normalize(axis);
+	float s = sin(angle);
+	float c = cos(angle);
+	float oc = 1.0 - c;
+	return mat3(vec3(oc * axis.x * axis.x + c, oc * axis.x * axis.y - axis.z * s, oc * axis.z * axis.x + axis.y * s), vec3(oc * axis.x * axis.y + axis.z * s, oc * axis.y * axis.y + c, oc * axis.y * axis.z - axis.x * s), vec3(oc * axis.z * axis.x - axis.y * s, oc * axis.y * axis.z + axis.x * s, oc * axis.z * axis.z + c));
+}
+
+mat4 __build_rotation_mat4(vec3 axis, float angle) {
+	axis = normalize(axis);
+	float s = sin(angle);
+	float c = cos(angle);
+	float oc = 1.0 - c;
+	return mat4(vec4(oc * axis.x * axis.x + c, oc * axis.x * axis.y - axis.z * s, oc * axis.z * axis.x + axis.y * s, 0), vec4(oc * axis.x * axis.y + axis.z * s, oc * axis.y * axis.y + c, oc * axis.y * axis.z - axis.x * s, 0), vec4(oc * axis.z * axis.x - axis.y * s, oc * axis.y * axis.z + axis.x * s, oc * axis.z * axis.z + c, 0), vec4(0, 0, 0, 1));
+}
+
+vec2 __get_random_unit_vec2(inout uint seed) {
+	return normalize(vec2(__rand_from_seed_m1_p1(seed), __rand_from_seed_m1_p1(seed)));
+}
+
+vec3 __get_random_unit_vec3(inout uint seed) {
+	return normalize(vec3(__rand_from_seed_m1_p1(seed), __rand_from_seed_m1_p1(seed), __rand_from_seed_m1_p1(seed)));
+}
+
+vec2 __get_random_point_on_ring2d(inout uint seed, float radius, float inner_radius) {
+	float angle = __rand_from_seed(seed) * TAU;
+	vec2 ring = vec2(sin(angle), cos(angle)) * __randf_range(seed, inner_radius, radius);
+	return vec2(ring.x, ring.y);
+}
+
+vec3 __get_random_point_on_ring3d(inout uint seed, float radius, float inner_radius, float height) {
+	float angle = __rand_from_seed(seed) * TAU;
+	vec2 ring = vec2(sin(angle), cos(angle)) * __randf_range(seed, inner_radius, radius);
+	return vec3(ring.x, __randf_range(seed, min(0.0, height), max(0.0, height)), ring.y);
+}
+
+vec2 __randv2_range(inout uint seed, vec2 from, vec2 to) {
+	return vec2(__randf_range(seed, from.x, to.x), __randf_range(seed, from.y, to.y));
+}
+
+vec3 __randv3_range(inout uint seed, vec3 from, vec3 to) {
+	return vec3(__randf_range(seed, from.x, to.x), __randf_range(seed, from.y, to.y), __randf_range(seed, from.z, to.z));
+}
+
+vec4 __randv4_range(inout uint seed, vec4 from, vec4 to) {
+	return vec4(__randf_range(seed, from.x, to.x), __randf_range(seed, from.y, to.y), __randf_range(seed, from.z, to.z), __randf_range(seed, from.w, to.w));
+}
+
+void start() {
+	uint __seed = __hash(NUMBER + uint(1) + RANDOM_SEED);
+
+	{
+// RingEmitter:12
+		float n_in12p0 = 1.00000;
+		float n_in12p1 = 0.00000;
+		float n_in12p2 = 0.00000;
+		vec3 n_out12p0 = __get_random_point_on_ring3d(__seed, n_in12p0, n_in12p1, n_in12p2);
+
+
+// Input:11
+		uint n_out11p0 = INDEX;
+
+
+// Vector2Parameter:9
+		vec2 n_out9p0 = Particle_Size_Range;
+
+
+// VectorDecompose:10
+		float n_out10p0 = n_out9p0.x;
+		float n_out10p1 = n_out9p0.y;
+
+
+// ParticleRandomness:15
+		float n_out15p0 = __randf_range(n_out11p0, n_out10p0, n_out10p1);
+
+
+// StartOutput:0
+		if (RESTART_POSITION) {
+			TRANSFORM = mat4(vec4(1.0, 0.0, 0.0, 0.0), vec4(0.0, 1.0, 0.0, 0.0), vec4(0.0, 0.0, 1.0, 0.0), vec4(n_out12p0, 1.0));
+			if (RESTART_VELOCITY) {
+				VELOCITY = (EMISSION_TRANSFORM * vec4(VELOCITY, 0.0)).xyz;
+			}
+			TRANSFORM = EMISSION_TRANSFORM * TRANSFORM;
+		}
+		TRANSFORM *= mat4(vec4(n_out15p0, 0, 0, 0), vec4(0, n_out15p0, 0, 0), vec4(0, 0, n_out15p0, 0), vec4(0, 0, 0, 1));
+
+
+	}
+}
+
+"
+graph_offset = Vector2(-626, -207)
+mode = 2
+flags/collision_use_scale = false
+flags/disable_force = false
+flags/disable_velocity = false
+flags/keep_data = false
+nodes/start/9/node = SubResource("VisualShaderNodeVec2Parameter_gg2rq")
+nodes/start/9/position = Vector2(-440, 360)
+nodes/start/10/node = SubResource("VisualShaderNodeVectorDecompose_wteeh")
+nodes/start/10/position = Vector2(-180, 360)
+nodes/start/11/node = SubResource("VisualShaderNodeInput_y7rg3")
+nodes/start/11/position = Vector2(-240, 280)
+nodes/start/12/node = SubResource("VisualShaderNodeParticleRingEmitter_mrlch")
+nodes/start/12/position = Vector2(-160, 100)
+nodes/start/13/node = SubResource("VisualShaderNodeComment_qe1tp")
+nodes/start/13/position = Vector2(60, -80)
+nodes/start/14/node = SubResource("VisualShaderNodeFloatConstant_6karr")
+nodes/start/14/position = Vector2(100, 20)
+nodes/start/15/node = SubResource("VisualShaderNodeParticleRandomness_n8i5v")
+nodes/start/15/position = Vector2(20, 320)
+nodes/start/connections = PackedInt32Array(9, 0, 10, 0, 12, 0, 0, 4, 10, 0, 15, 1, 10, 1, 15, 2, 11, 0, 15, 0, 15, 0, 0, 5)
+nodes/start_custom/3/node = SubResource("VisualShaderNodeComment_va6si")
+nodes/start_custom/3/position = Vector2(-120, 160)
+nodes/start_custom/4/node = SubResource("VisualShaderNodeFloatConstant_6ckhc")
+nodes/start_custom/4/position = Vector2(-80, 260)

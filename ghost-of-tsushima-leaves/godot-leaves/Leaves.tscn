@@ -1,0 +1,107 @@
+[gd_scene load_steps=17 format=3 uid="uid://syj244lpgvay"]
+
+[ext_resource type="Material" uid="uid://dhkkcnjgk8utl" path="res://1_Leaves - Spawn Material.tres" id="1_6c3ca"]
+[ext_resource type="Shader" uid="uid://bdxlri1mriiga" path="res://Debug.tres" id="2_ssj7m"]
+[ext_resource type="Material" uid="uid://dyugv10hnrxb1" path="res://2_Leaves - Collider Material.tres" id="3_pcmut"]
+[ext_resource type="Script" path="res://Collider Properties.gd" id="3_xjedy"]
+[ext_resource type="Material" uid="uid://g5o4ljokrhbx" path="res://3_Leaves - Up Motion Material.tres" id="5_vevcx"]
+[ext_resource type="Material" uid="uid://c88ba8x0a881r" path="res://4_Leaves - Push Motion Material.tres" id="6_vwuk5"]
+[ext_resource type="Material" uid="uid://b1v8u6ql7v2rg" path="res://5_Leaves - Flip Motion Material.tres" id="7_0x1u1"]
+[ext_resource type="Shader" uid="uid://c3352gvntvqkq" path="res://6_Leaves - Full Shader.tres" id="7_ka0ux"]
+[ext_resource type="ArrayMesh" uid="uid://crltsmig13vdx" path="res://Paper_Mesh.res" id="9_5gjri"]
+[ext_resource type="PackedScene" uid="uid://cgfb3faj0xhep" path="res://Paper.gltf" id="9_yl7hv"]
+[ext_resource type="Material" uid="uid://djcg117eolbwd" path="res://6_Leaves - Full Material.tres" id="10_32lfa"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_bwqpn"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_qrlxu"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_blpxb"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_khfee"]
+render_priority = 0
+shader = ExtResource("2_ssj7m")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d2tju"]
+render_priority = 0
+shader = ExtResource("7_ka0ux")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.953191, 0.2418, -0.181549, 0, 0.60042, 0.799685, 0.30237, -0.762252, 0.572315, 0, 4.015, 0)
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+transform = Transform3D(32, 0, 0, 0, 0.1, 0, 0, 0, 10, 8, -0.1, -1)
+mesh = SubResource("BoxMesh_bwqpn")
+skeleton = NodePath("../Ground Collider")
+
+[node name="Ground Collider" type="GPUParticlesCollisionBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, -0.25, -1)
+size = Vector3(32, 0.5, 16)
+
+[node name="Collider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.14604, 0, -4.23749)
+shape = SubResource("SphereShape3D_qrlxu")
+
+[node name="1_Leaves - Spawn" type="GPUParticles3D" parent="."]
+transform = Transform3D(0.999645, 0.026648, 0, -0.026648, 0.999645, 0, 0, 0, 1, 0, 0, 0)
+amount = 512
+lifetime = 60.0
+preprocess = 100.0
+process_material = ExtResource("1_6c3ca")
+draw_pass_1 = SubResource("SphereMesh_blpxb")
+
+[node name="2_Leaves - Collider" type="GPUParticles3D" parent="." node_paths=PackedStringArray("colliderNode3D")]
+transform = Transform3D(0.999645, 0.026648, 0, -0.026648, 0.999645, 0, 0, 0, 1, 4, 0, 0)
+material_override = SubResource("ShaderMaterial_khfee")
+amount = 512
+lifetime = 60.0
+preprocess = 100.0
+process_material = ExtResource("3_pcmut")
+draw_pass_1 = SubResource("SphereMesh_blpxb")
+script = ExtResource("3_xjedy")
+colliderNode3D = NodePath("../Collider")
+
+[node name="3_Leaves - Up Motion" type="GPUParticles3D" parent="." node_paths=PackedStringArray("colliderNode3D")]
+transform = Transform3D(0.999645, 0.026648, 0, -0.026648, 0.999645, 0, 0, 0, 1, 8, 0, 0)
+material_override = SubResource("ShaderMaterial_khfee")
+amount = 512
+lifetime = 60.0
+process_material = ExtResource("5_vevcx")
+draw_pass_1 = SubResource("SphereMesh_blpxb")
+script = ExtResource("3_xjedy")
+colliderNode3D = NodePath("../Collider")
+
+[node name="4_Leaves - Push Motion" type="GPUParticles3D" parent="." node_paths=PackedStringArray("colliderNode3D")]
+transform = Transform3D(0.999645, 0.026648, 0, -0.026648, 0.999645, 0, 0, 0, 1, 12, 0, 0)
+material_override = SubResource("ShaderMaterial_khfee")
+amount = 512
+lifetime = 60.0
+process_material = ExtResource("6_vwuk5")
+draw_pass_1 = SubResource("SphereMesh_blpxb")
+script = ExtResource("3_xjedy")
+colliderNode3D = NodePath("../Collider")
+
+[node name="5_Leaves - Flip Motion" type="GPUParticles3D" parent="." node_paths=PackedStringArray("colliderNode3D")]
+transform = Transform3D(0.999645, 0.026648, 0, -0.026648, 0.999645, 0, 0, 0, 1, 16, 0, 0)
+material_override = SubResource("ShaderMaterial_d2tju")
+amount = 512
+lifetime = 60.0
+process_material = ExtResource("7_0x1u1")
+draw_pass_1 = ExtResource("9_5gjri")
+script = ExtResource("3_xjedy")
+colliderNode3D = NodePath("../Collider")
+
+[node name="6_Leaves - Full" type="GPUParticles3D" parent="." node_paths=PackedStringArray("colliderNode3D")]
+transform = Transform3D(0.999645, 0.026648, 0, -0.026648, 0.999645, 0, 0, 0, 1, 8, 0, -4)
+material_override = SubResource("ShaderMaterial_d2tju")
+amount = 512
+lifetime = 60.0
+process_material = ExtResource("10_32lfa")
+draw_pass_1 = ExtResource("9_5gjri")
+script = ExtResource("3_xjedy")
+colliderNode3D = NodePath("../Collider")
+
+[node name="Paper" parent="." instance=ExtResource("9_yl7hv")]
+transform = Transform3D(5, 0, 0, 0, -2.18557e-07, 5, 0, -5, -2.18557e-07, 16, 0, 2)

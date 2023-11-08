@@ -1,0 +1,17 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://g5o4ljokrhbx"]
+
+[ext_resource type="Shader" uid="uid://b2rx1vo7o5c6n" path="res://3_Leaves - Up Motion.tres" id="1_vsv0g"]
+
+[resource]
+shader = ExtResource("1_vsv0g")
+shader_parameter/Particle_Size_Range = Vector2(0.05, 0.15)
+shader_parameter/Collider_Velocity = Vector3(0, 0, 0)
+shader_parameter/Motion_Direction_Dissipation = 0.5
+shader_parameter/Collider_Radius_Remap = Vector2(-0.5, 0)
+shader_parameter/Collider_Radius = 0.5
+shader_parameter/Collider_Position = Vector3(11.2317, 5.96046e-07, 0.319176)
+shader_parameter/Motion_Strength_Multiplier = 1.0
+shader_parameter/Motion_Strength_Dissipation = 1.0
+shader_parameter/Up_Push_Strength = 80.0
+shader_parameter/Mass = 100.0
+shader_parameter/Drag = 2.0

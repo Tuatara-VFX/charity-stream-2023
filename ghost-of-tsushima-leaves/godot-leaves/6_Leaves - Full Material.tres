@@ -1,0 +1,20 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://djcg117eolbwd"]
+
+[ext_resource type="Shader" uid="uid://b3n0kp28gsnr8" path="res://6_Leaves - Full.tres" id="1_qk7wh"]
+
+[resource]
+shader = ExtResource("1_qk7wh")
+shader_parameter/Particle_Size_Range = Vector2(0.05, 0.15)
+shader_parameter/Collider_Velocity = Vector3(0, 0, 0)
+shader_parameter/Motion_Direction_Dissipation = 0.5
+shader_parameter/Collider_Radius_Remap = Vector2(-0.5, 0)
+shader_parameter/Collider_Radius = 0.5
+shader_parameter/Collider_Position = Vector3(8.84883, 4.76837e-07, -3.5524)
+shader_parameter/Motion_Strength_Multiplier = 1.0
+shader_parameter/Motion_Strength_Dissipation = 1.0
+shader_parameter/Up_Push_Strength = 80.0
+shader_parameter/Mass = 100.0
+shader_parameter/Push_Strength = 12.0
+shader_parameter/Drag = 2.0
+shader_parameter/Flip_Angle_Multiplier_Range = Vector2(6, 16)
+shader_parameter/Flip_Distance_Range = Vector2(0, 2)

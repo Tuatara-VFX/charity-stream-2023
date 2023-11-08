@@ -1,0 +1,14 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dyugv10hnrxb1"]
+
+[ext_resource type="Shader" uid="uid://c7ypa32yivbwl" path="res://2_Leaves - Collider.tres" id="1_lqre2"]
+
+[resource]
+shader = ExtResource("1_lqre2")
+shader_parameter/Particle_Size_Range = Vector2(0.05, 0.15)
+shader_parameter/Collider_Velocity = Vector3(0, 0, 0)
+shader_parameter/Motion_Direction_Dissipation = 0.5
+shader_parameter/Collider_Radius_Remap = Vector2(-0.5, 0)
+shader_parameter/Collider_Radius = 0.5
+shader_parameter/Collider_Position = Vector3(7.60695, 8.34465e-07, -2.15093)
+shader_parameter/Motion_Strength_Multiplier = 1.0
+shader_parameter/Motion_Strength_Dissipation = 1.0
